@@ -1,0 +1,163 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.util.Random;
+
+public class WeatherForecastingSystemAWT {
+
+    public static void main(String[] args) {
+        // Create the main frame
+        Frame frame = new Frame("Weather Forecasting System");
+        frame.setSize(600, 500);
+        frame.setLayout(null);
+        frame.setBackground(new Color(135, 206, 250)); // Light blue background
+
+        // Title
+        Label title = new Label("Real-Time Weather Forecast", Label.CENTER);
+        title.setBounds(50, 50, 500, 40);
+        title.setFont(new Font("Arial", Font.BOLD, 24));
+        title.setBackground(new Color(70, 130, 180)); // Steel blue background
+        title.setForeground(Color.WHITE);
+
+        // Input Panel
+        Label cityLabel = new Label("Enter City:");
+        cityLabel.setBounds(50, 120, 100, 25);
+        cityLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        TextField cityInput = new TextField();
+        cityInput.setBounds(160, 120, 200, 25);
+        cityInput.setFont(new Font("Arial", Font.PLAIN, 16));
+
+        Button submitButton = new Button("Get Weather");
+        submitButton.setBounds(380, 120, 100, 25);
+        submitButton.setFont(new Font("Arial", Font.BOLD, 16));
+        submitButton.setBackground(new Color(60, 179, 113)); // Medium sea green
+        submitButton.setForeground(Color.WHITE);
+
+        // Weather Data Display
+        Label tempLabel = new Label("Temperature:");
+        Label humidityLabel = new Label("Humidity:");
+        Label windLabel = new Label("Wind Speed:");
+        Label precipLabel = new Label("Precipitation:");
+        Label alertLabel = new Label("Alert:");
+
+        tempLabel.setBounds(50, 180, 150, 25);
+        humidityLabel.setBounds(50, 220, 150, 25);
+        windLabel.setBounds(50, 260, 150, 25);
+        precipLabel.setBounds(50, 300, 150, 25);
+        alertLabel.setBounds(50, 340, 150, 25);
+
+        tempLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        humidityLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        windLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        precipLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        alertLabel.setFont(new Font("Arial", Font.BOLD, 18));
+
+        Label tempValue = new Label("N/A");
+        Label humidityValue = new Label("N/A");
+        Label windValue = new Label("N/A");
+        Label precipValue = new Label("N/A");
+        Label alertValue = new Label("N/A");
+
+        tempValue.setBounds(220, 180, 300, 25);
+        humidityValue.setBounds(220, 220, 300, 25);
+        windValue.setBounds(220, 260, 300, 25);
+        precipValue.setBounds(220, 300, 300, 25);
+        alertValue.setBounds(220, 340, 300, 25);
+
+        tempValue.setFont(new Font("Arial", Font.BOLD, 18));
+        humidityValue.setFont(new Font("Arial", Font.BOLD, 18));
+        windValue.setFont(new Font("Arial", Font.BOLD, 18));
+        precipValue.setFont(new Font("Arial", Font.BOLD, 18));
+        alertValue.setFont(new Font("Arial", Font.BOLD, 18));
+
+        // Adding components to the frame
+        frame.add(title);
+        frame.add(cityLabel);
+        frame.add(cityInput);
+        frame.add(submitButton);
+        frame.add(tempLabel);
+        frame.add(humidityLabel);
+        frame.add(windLabel);
+        frame.add(precipLabel);
+        frame.add(alertLabel);
+        frame.add(tempValue);
+        frame.add(humidityValue);
+        frame.add(windValue);
+        frame.add(precipValue);
+        frame.add(alertValue);
+
+        // Button click event listener
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String city = cityInput.getText().trim();
+
+                if (city.isEmpty()) {
+                    showMessage("Please enter a city name!", frame);
+                } else {
+                    // Generate random weather data
+                    Random random = new Random();
+                    int temperature = random.nextInt(45); // 0 to 44°C
+                    int humidity = random.nextInt(100);  // 0 to 99%
+                    int windSpeed = random.nextInt(50);  // 0 to 49 km/h
+                    int precipitation = random.nextInt(100); // 0 to 99%
+
+                    // Update label values
+                    tempValue.setText(temperature + "°C");
+                    humidityValue.setText(humidity + "%");
+                    windValue.setText(windSpeed + " km/h");
+                    precipValue.setText(precipitation + "%");
+
+                    // Assign colors for each value
+                    tempValue.setForeground(temperature > 35 ? Color.RED : Color.BLACK);
+                    humidityValue.setForeground(humidity > 50 ? Color.BLUE : Color.BLACK);
+                    windValue.setForeground(windSpeed > 30 ? Color.ORANGE : Color.BLACK);
+                    precipValue.setForeground(precipitation > 70 ? Color.MAGENTA : Color.BLACK);
+
+                    // Set alert
+                    if (temperature > 35) {
+                        alertValue.setText("Heat Alert!");
+                        alertValue.setForeground(Color.RED);
+                    } else if (precipitation > 70) {
+                        alertValue.setText("Rain Alert!");
+                        alertValue.setForeground(Color.MAGENTA);
+                    } else if (windSpeed > 30) {
+                        alertValue.setText("Wind Alert!");
+                        alertValue.setForeground(Color.ORANGE);
+                    } else {
+                        alertValue.setText("All Clear!");
+                        alertValue.setForeground(new Color(60, 179, 113)); // Green
+                    }
+
+                    // Show confirmation
+                    showMessage("Weather data for " + city + " updated!", frame);
+                }
+            }
+        });
+
+        // Closing the frame
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                frame.dispose();
+            }
+        });
+
+        // Make the frame visible
+        frame.setVisible(true);
+    }
+
+    // Helper method to show a message dialog
+    private static void showMessage(String message, Frame frame) {
+        Dialog dialog = new Dialog(frame, "Message", true);
+        dialog.setLayout(new FlowLayout());
+        Label msg = new Label(message);
+        msg.setFont(new Font("Arial", Font.PLAIN, 16));
+        dialog.add(msg);
+        Button ok = new Button("OK");
+        ok.addActionListener(e -> dialog.setVisible(false));
+        dialog.add(ok);
+        dialog.setSize(300, 150);
+        dialog.setLocationRelativeTo(frame);
+        dialog.setVisible(true);
+    }
+}
